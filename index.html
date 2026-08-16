@@ -1,0 +1,1025 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pick Your Favorite</title>
+<style>
+:root{
+  --bg:#07080a;
+  --surface:#0d0f13;
+  --surface-hover:#11141a;
+  --border:#20242c;
+  --border-hover:#383e49;
+  --text:#f5f5f6;
+  --muted:#777d88;
+  --subtle:#4d535d;
+  --accent:#39FF88;
+  --accent-soft:rgba(255,138,0,.12);
+  --accent-glow:rgba(255,138,0,.22);
+}
+[data-theme="light"]{
+  --bg:#f5f5f3;
+  --surface:#ffffff;
+  --surface-hover:#fafaf8;
+  --border:#deded9;
+  --border-hover:#c9c9c2;
+  --text:#17181a;
+  --muted:#666a70;
+  --subtle:#85898f;
+  --accent:#008F4C;
+  --accent-soft:rgba(232,117,0,.12);
+  --accent-glow:rgba(232,117,0,.18);
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  margin:0;
+  width:100%;
+  height:100%;
+}
+
+body{
+  min-height:100%;
+  overflow:hidden;
+  background:
+    radial-gradient(
+      circle at 50% -20%,
+      rgba(255,138,0,.055),
+      transparent 42%
+    ),
+    var(--bg);
+  color:var(--text);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ---------------- Header ---------------- */
+.eyebrow{
+  margin-bottom:9px;
+
+  color:var(--accent);
+
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+
+.subtitle{
+  margin-top:9px;
+
+  color:#a1a5ac;
+
+  font-size:13px;
+  font-weight:400;
+}
+
+#footer span{
+  color:#30343b;
+  padding:0 3px;
+}
+
+header{
+  flex:0 0 auto;
+  text-align:center;
+  padding:
+    clamp(28px,5vh,54px)
+    20px
+    clamp(18px,3vh,30px);
+}
+
+h1{
+  margin:0;
+  font-size:clamp(25px,3.2vw,38px);
+  line-height:1.05;
+  font-weight:650;
+  letter-spacing:-.045em;
+}
+
+#status{
+  min-height:18px;
+  margin-top:10px;
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:.01em;
+  transition:opacity .2s ease;
+}
+
+/* ---------------- Main ---------------- */
+
+#game{
+  flex:1 1 auto;
+  min-height:0;
+  width:min(1480px,100%);
+  margin:auto;
+  padding:
+    0
+    clamp(16px,2.2vw,30px)
+    clamp(18px,2.5vh,28px);
+
+  display:flex;
+  align-items:center;
+}
+
+/* ---------------- Choices ---------------- */
+
+#choices{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:clamp(10px,1.4vw,20px);
+}
+
+/* ---------------- Card ---------------- */
+
+.choice{
+  position:relative;
+  min-width:0;
+  padding:clamp(7px,1vw,11px);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.018),
+      rgba(255,255,255,0)
+    ),
+    var(--surface);
+
+  border:1px solid var(--border);
+  border-radius:16px;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 8px 30px rgba(0,0,0,.18);
+
+  transform:translateY(0);
+
+  transition:
+    transform .18s cubic-bezier(.2,.8,.2,1),
+    border-color .18s ease,
+    background .18s ease,
+    box-shadow .18s ease;
+}
+
+.choice::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  opacity:0;
+  box-shadow:
+    inset 0 0 0 1px var(--accent),
+    0 0 35px var(--accent-glow);
+  transition:opacity .18s ease;
+}
+
+.choice:hover{
+  transform:translateY(-4px);
+  background:var(--surface-hover);
+  border-color:var(--border-hover);
+  box-shadow:
+    0 14px 42px rgba(0,0,0,.30);
+}
+
+.choice:hover::after{
+  opacity:.25;
+}
+
+.choice:active{
+  transform:translateY(-1px) scale(.995);
+}
+
+.choice:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:4px;
+}
+
+.choice.selected{
+  transform:translateY(-3px) scale(1.012);
+  border-color:var(--accent);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,138,0,.07),
+      rgba(255,138,0,.015)
+    ),
+    var(--surface);
+
+  box-shadow:
+    0 0 0 3px var(--accent-soft),
+    0 18px 50px rgba(0,0,0,.38);
+}
+
+.choice.selected::after{
+  opacity:1;
+}
+
+/* ---------------- Theme toggle ---------------- */
+
+.theme-toggle{
+  position:fixed;
+  top:18px;
+  right:20px;
+  z-index:20;
+
+  width:38px;
+  height:38px;
+
+  display:grid;
+  place-items:center;
+
+  padding:0;
+
+  border:1px solid var(--border);
+  border-radius:50%;
+
+  background:var(--surface);
+  color:var(--text);
+
+  cursor:pointer;
+
+  font-size:16px;
+  line-height:1;
+
+  box-shadow:0 6px 20px rgba(0,0,0,.12);
+
+  transition:
+    background .2s ease,
+    border-color .2s ease,
+    color .2s ease,
+    transform .18s ease,
+    box-shadow .2s ease;
+}
+
+.theme-toggle:hover{
+  transform:translateY(-2px);
+  border-color:var(--border-hover);
+  box-shadow:0 9px 26px rgba(0,0,0,.18);
+}
+
+.theme-toggle:active{
+  transform:scale(.94);
+}
+
+.theme-toggle:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+}
+
+#themeIcon{
+  display:block;
+  transition:
+    transform .25s ease,
+    opacity .15s ease;
+}
+
+.theme-toggle:hover #themeIcon{
+  transform:rotate(15deg) scale(1.08);
+}
+
+@media(max-width:700px){
+  .theme-toggle{
+    top:12px;
+    right:12px;
+    width:35px;
+    height:35px;
+    font-size:15px;
+  }
+}
+
+body,
+.choice,
+.theme-toggle,
+#footer,
+#status{
+  transition:
+    background-color .25s ease,
+    color .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+/* ---------------- CA canvas ---------------- */
+
+.choice canvas{
+  width:100%;
+  aspect-ratio:1;
+  display:block;
+
+  background:#000;
+  border-radius:10px;
+
+  image-rendering:pixelated;
+
+  transition:
+    filter .18s ease,
+    transform .18s ease;
+}
+
+.choice:hover canvas{
+  filter:brightness(1.06);
+}
+
+.choice.selected canvas{
+  filter:brightness(1.08);
+}
+
+/* ---------------- Labels ---------------- */
+
+.label{
+  padding:
+    10px
+    4px
+    3px;
+
+  text-align:center;
+
+  color:var(--muted);
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+
+  transition:
+    color .18s ease;
+}
+
+.choice:hover .label{
+  color:#a2a7af;
+}
+
+.choice.selected .label{
+  color:var(--accent);
+}
+
+/* ---------------- Footer ---------------- */
+
+#footer{
+  flex:0 0 auto;
+
+  text-align:center;
+
+  color:var(--subtle);
+
+  font-size:10px;
+  letter-spacing:.02em;
+
+  padding:
+    0
+    16px
+    16px;
+}
+
+/* ---------------- Loading ---------------- */
+
+#loading{
+  position:fixed;
+  inset:0;
+  z-index:10;
+
+  display:grid;
+  place-items:center;
+
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(255,138,0,.045),
+      transparent 32%
+    ),
+    var(--bg);
+
+  color:var(--muted);
+
+  font-size:12px;
+  letter-spacing:.02em;
+}
+
+#loading::after{
+  content:"";
+  position:absolute;
+
+  width:18px;
+  height:18px;
+
+  border:2px solid #272b32;
+  border-top-color:var(--accent);
+  border-radius:50%;
+
+  animation:spin .75s linear infinite;
+}
+
+#loading.hidden{
+  display:none;
+}
+
+.choice.not-selected{
+  opacity:.42;
+  transform:scale(.985);
+  filter:saturate(.65);
+  transition:
+    opacity .2s ease,
+    transform .2s ease,
+    filter .2s ease;
+}
+
+.choice.selected{
+  position:relative;
+}
+
+.choice.selected::before{
+  content:"✓";
+
+  position:absolute;
+  top:14px;
+  right:14px;
+  z-index:2;
+
+  width:25px;
+  height:25px;
+
+  display:grid;
+  place-items:center;
+
+  border-radius:50%;
+
+  background:var(--accent);
+  color:#111;
+
+  font-size:14px;
+  font-weight:800;
+
+  box-shadow:
+    0 4px 14px rgba(0,0,0,.35);
+}
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+/* ---------------- Responsive ---------------- */
+
+@media(max-width:900px){
+  #game{
+    padding-left:14px;
+    padding-right:14px;
+  }
+
+  #choices{
+    gap:10px;
+  }
+
+  .choice{
+    border-radius:13px;
+  }
+}
+
+@media(max-width:700px){
+  html,
+  body{
+    overflow:auto;
+  }
+  .eyebrow{
+  font-size:8px;
+  margin-bottom:8px;
+  }
+
+  .subtitle{
+    font-size:12px;
+    margin-top:8px;
+  }
+
+  header{
+    padding:
+      22px
+      16px
+      16px;
+  }
+
+  h1{
+    font-size:27px;
+  }
+
+  #game{
+    align-items:flex-start;
+    padding:
+      4px
+      12px
+      18px;
+  }
+
+  #choices{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+
+  .choice{
+    padding:6px;
+    border-radius:12px;
+  }
+
+  .choice canvas{
+    border-radius:8px;
+  }
+
+  .label{
+    padding-top:8px;
+    font-size:9px;
+  }
+
+  #footer{
+    padding-bottom:14px;
+  }
+}
+
+@media(max-width:380px){
+  #choices{
+    gap:7px;
+  }
+
+  .choice{
+    padding:5px;
+  }
+
+  .label{
+    font-size:8px;
+  }
+}
+
+/* ---------------- Reduced motion ---------------- */
+
+@media(prefers-reduced-motion:reduce){
+  *,
+  *::before,
+  *::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+  <body>
+  <button
+    id="themeToggle"
+    class="theme-toggle"
+    type="button"
+    aria-label="Switch to light mode"
+    title="Switch to light mode"
+  >
+    <span id="themeIcon" aria-hidden="true">☀</span>
+  </button>
+<div id="loading">Loading…</div>
+<header>
+  <div class="eyebrow">CELLULAR AUTOMATA</div>
+  <h1>Pick Your Favorite</h1>
+  <div class="subtitle">Which pattern do you prefer?</div>
+  <div id="status"></div>
+</header>
+<main id="game"><div id="choices"></div></main>
+<div id="footer">Choose one <span>·</span> A new set appears automatically</div>
+<script>
+/*
+  FRONTEND CONFIGURATION
+
+  Put your rules file at this path, or change this value:
+    const RULE_LIST_URL = "./rules.txt";
+
+  The file may contain lines such as:
+    1111111111111111 - 32972
+    2111211121112111 - 2048
+
+  The number after "-" is ignored by this app.
+
+  BACKEND:
+  Replace SUPABASE_FUNCTION_URL with the public URL of your
+  deployed Supabase Edge Function, for example:
+    https://YOUR_PROJECT_REF.supabase.co/functions/v1/vote
+
+  The frontend sends:
+    session_id
+    timestamp
+    rule_1
+    rule_2
+    rule_3
+    rule_4
+    winner
+
+  No account, name, email, or rule "value" is sent.
+*/
+
+const SUPABASE_VOTE_URL = "https://bhcznxegoudsfrswwffu.supabase.co/functions/v1/vote";
+const SUPABASE_NR_URL = "https://bhcznxegoudsfrswwffu.supabase.co/functions/v1/next-round";
+const SUPABASE_ANON_KEY = "sb_publishable__vTIjCnt0aWp6RTwmKLV8Q_fWyT_NlY";
+
+const GENERATIONS = 64;
+const CHOICES = 4;
+const NEXT_DELAY = 250;
+const ACTIVE_COLOR = "#2eb309";
+const INACTIVE_COLOR = "#08090b";
+
+const DARK_ACTIVE_COLOR = "#2eb309";
+const DARK_INACTIVE_COLOR = "#08090b";
+
+const LIGHT_ACTIVE_COLOR = "#008F4C";
+const LIGHT_INACTIVE_COLOR = "#ffffff";
+
+let rules = [];
+let currentChoices = [];
+let votingLocked = false;
+let sessionId = null;
+let currentRoundId = null;
+
+function getSessionId(){
+  let id = localStorage.getItem("caSessionId");
+  if(!id){
+    id = (crypto.randomUUID ? crypto.randomUUID() : fallbackUuid());
+    localStorage.setItem("caSessionId", id);
+  }
+  return id;
+}
+
+function fallbackUuid(){
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{
+    const r=Math.random()*16|0;
+    const v=c==="x"?r:(r&3|8);
+    return v.toString(16);
+  });
+}
+
+
+async function loadRules(){
+  try{
+    document.getElementById("loading").classList.add("hidden");
+
+    document.getElementById("status").textContent =
+      "Loading round...";
+
+    await showRound();
+    document.getElementById("status").textContent =
+      "";
+
+  }catch(error){
+    console.error(error);
+
+    document.getElementById("loading").innerHTML =
+      `<div style="text-align:center;padding:30px">
+        <div style="color:#f4f4f5;font-weight:600">
+          Could not load a voting round
+        </div>
+        <div style="margin-top:8px;color:#666">
+          Please refresh the page and try again.
+        </div>
+      </div>`;
+  }
+}
+
+function generateCA(ruleString){
+  const rule=new Uint8Array(16);
+  for(let i=0;i<16;i++) rule[i]=ruleString.charCodeAt(i)-48;
+
+  let previous=new Uint8Array(GENERATIONS*GENERATIONS);
+  let current=new Uint8Array(GENERATIONS*GENERATIONS);
+  previous[0]=1;
+
+  for(let size=2;size<=GENERATIONS;size++){
+    const previousSize=size-1;
+    current.fill(1,0,size*size);
+
+    for(let y=1;y<size-1;y++){
+      const previousBase=(y-1)*previousSize;
+      const currentBase=y*size;
+
+      for(let x=1;x<size-1;x++){
+        const p=previousBase+x-1;
+        const a=previous[p],b=previous[p+1],c=previous[p+previousSize],d=previous[p+previousSize+1];
+        const index=(((a-1)*2+(b-1))*2+(c-1))*2+(d-1);
+        current[currentBase+x]=rule[index];
+      }
+    }
+    [previous,current]=[current,previous];
+  }
+  return previous;
+}
+
+function drawCA(canvas,ruleString){
+  const grid=generateCA(ruleString);
+  const ctx=canvas.getContext("2d");
+  const image=ctx.createImageData(GENERATIONS,GENERATIONS);
+
+  const theme=
+    document.documentElement.getAttribute("data-theme") || "dark";
+
+  const activeColor=
+    theme==="light"
+      ? LIGHT_ACTIVE_COLOR
+      : DARK_ACTIVE_COLOR;
+
+  const inactiveColor=
+    theme==="light"
+      ? LIGHT_INACTIVE_COLOR
+      : DARK_INACTIVE_COLOR;
+
+  const active=hexToRgb(activeColor);
+  const inactive=hexToRgb(inactiveColor);
+
+  
+
+  for(let i=0;i<grid.length;i++){
+    const p=i*4;
+    const color=grid[i]===2?active:inactive;
+    image.data[p]=color[0];
+    image.data[p+1]=color[1];
+    image.data[p+2]=color[2];
+    image.data[p+3]=255;
+  }
+  ctx.putImageData(image,0,0);
+}
+
+function hexToRgb(hex){
+  const value=hex.replace("#","");
+  return [
+    parseInt(value.substring(0,2),16),
+    parseInt(value.substring(2,4),16),
+    parseInt(value.substring(4,6),16)
+  ];
+}
+
+async function showRound(){
+  votingLocked=true;
+
+  try{
+    const round = await getNextRound();
+
+    currentRoundId = round.round_id;
+
+    currentChoices = round.rules.map((rule, index) => ({
+      index,
+      rule
+    }));
+
+    votingLocked=false;
+
+    const container=document.getElementById("choices");
+    container.innerHTML="";
+
+    for(let i=0;i<currentChoices.length;i++){
+      const item=currentChoices[i];
+
+      const button=document.createElement("div");
+      button.className="choice";
+      button.tabIndex=0;
+      button.setAttribute("role","button");
+      button.setAttribute("aria-label","Pattern "+(i+1));
+
+      const canvas=document.createElement("canvas");
+      canvas.width=GENERATIONS;
+      canvas.height=GENERATIONS;
+
+      const label=document.createElement("div");
+      label.className="label";
+      label.textContent="Pattern "+(i+1);
+
+      button.appendChild(canvas);
+      button.appendChild(label);
+      container.appendChild(button);
+
+      drawCA(canvas,item.rule);
+
+      button.addEventListener("click",()=>choose(i));
+
+      button.addEventListener("keydown",event=>{
+        if(event.key==="Enter"||event.key===" "){
+          event.preventDefault();
+          choose(i);
+        }
+      });
+    }
+
+  }catch(error){
+    console.error(error);
+
+    votingLocked=true;
+
+    document.getElementById("choices").innerHTML =
+      `<div style="text-align:center;padding:30px">
+        <div style="color:#f4f4f5;font-weight:600">
+          Could not load a voting round
+        </div>
+        <div style="margin-top:8px;color:#666">
+          Please refresh the page and try again.
+        </div>
+      </div>`;
+  }
+}
+
+async function choose(choicePosition){
+  if(votingLocked) return;
+
+  votingLocked=true;
+
+  const cards=document.querySelectorAll(".choice");
+  const selected=currentChoices[choicePosition];
+
+  if(!selected || !currentRoundId){
+    console.error("No valid choice or round is available.");
+    votingLocked=false;
+    return;
+  }
+
+  cards[choicePosition].classList.add("selected");
+  // Give the other choices a subtle fade while the vote is submitted.
+  cards.forEach((card,index)=>{
+    if(index !== choicePosition){
+      card.classList.add("not-selected");
+    }
+  });
+
+  document.getElementById("status").textContent="Recording vote…";
+
+  const vote={
+    session_id:sessionId,
+    round_id:currentRoundId,
+    winner:selected.rule
+  };
+
+  try{
+    await saveVote(vote);
+  }catch(error){
+    console.error("Vote submission failed:",error);
+
+    // Unlock and allow retry rather than silently losing a vote.
+    votingLocked=false;
+    cards[choicePosition].classList.remove("selected");
+
+    cards.forEach(card=>{
+      card.classList.remove("not-selected");
+    });
+
+    document.getElementById("status").textContent =
+      "Vote failed — click again to retry.";
+
+    return;
+  }
+  document.getElementById("status").textContent="Vote recorded";
+
+  setTimeout(showRound,NEXT_DELAY);
+}
+
+async function getNextRound(){
+  if(
+    !SUPABASE_NR_URL ||
+    SUPABASE_NR_URL.includes("PASTE_YOUR")
+  ){
+    throw new Error("Supabase next-round function URL has not been configured.");
+  }
+
+  const response = await fetch(SUPABASE_NR_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": "Bearer " + SUPABASE_ANON_KEY
+    },
+    body: "{}"
+  });
+
+  if(!response.ok){
+    let detail = "";
+    try{
+      detail = await response.text();
+    }catch(_){}
+
+    throw new Error("HTTP " + response.status + " " + detail);
+  }
+
+  const data = await response.json();
+
+  if(
+    typeof data.round_id !== "string" ||
+    !Array.isArray(data.rules) ||
+    data.rules.length !== CHOICES ||
+    !data.rules.every(rule => /^[12]{16}$/.test(rule))
+  ){
+    throw new Error("Supabase returned an invalid round.");
+  }
+
+  return data;
+}
+
+async function saveVote(vote){
+  if(!SUPABASE_VOTE_URL || SUPABASE_VOTE_URL.includes("PASTE_YOUR")){
+    throw new Error("Supabase vote function URL has not been configured.");
+  }
+
+  const response=await fetch(SUPABASE_VOTE_URL,{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": "Bearer " + SUPABASE_ANON_KEY
+    },
+    body:JSON.stringify(vote),
+    keepalive:true
+  });
+
+  if(!response.ok){
+    let detail="";
+    try{ detail=await response.text(); }catch(_){}
+    throw new Error("HTTP "+response.status+" "+detail);
+  }
+  return await response.json();
+}
+
+function escapeHtml(value){
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;");
+}
+function getPreferredTheme(){
+  const saved=localStorage.getItem("caTheme");
+
+  if(saved==="light" || saved==="dark"){
+    return saved;
+  }
+
+  return window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: light)").matches
+    ? "light"
+    : "dark";
+}
+
+function applyTheme(theme){
+  document.documentElement.setAttribute("data-theme",theme);
+
+  const icon=document.getElementById("themeIcon");
+  const button=document.getElementById("themeToggle");
+
+  if(theme==="light"){
+    icon.textContent="☾";
+    button.setAttribute("aria-label","Switch to dark mode");
+    button.setAttribute("title","Switch to dark mode");
+  }else{
+    icon.textContent="☀";
+    button.setAttribute("aria-label","Switch to light mode");
+    button.setAttribute("title","Switch to light mode");
+  }
+
+  localStorage.setItem("caTheme",theme);
+  document.querySelectorAll(".choice canvas").forEach((canvas,index)=>{
+    const item=currentChoices[index];
+
+    if(item){
+      drawCA(canvas,item.rule);
+    }
+  });
+}
+
+function toggleTheme(){
+  const current=
+    document.documentElement.getAttribute("data-theme") || "dark";
+
+  applyTheme(current==="dark" ? "light" : "dark");
+}
+
+applyTheme(getPreferredTheme());
+
+document
+  .getElementById("themeToggle")
+  .addEventListener("click",toggleTheme);
+
+
+sessionId=getSessionId();
+loadRules();
+</script>
+</body>
+</html>
