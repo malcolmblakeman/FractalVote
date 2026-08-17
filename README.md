@@ -1,6 +1,6 @@
 # FractalVote
 [Play Now!
-]([url](https://fractalvote.pages.dev/))
+](https://fractalvote.pages.dev/)
 
 Pick your favorite cellular automata pattern.
 
