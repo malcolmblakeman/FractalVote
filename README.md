@@ -1,6 +1,7 @@
 # FractalVote
 [Play Now!
 ](https://fractalvote.pages.dev/)
+<img width="1878" height="903" alt="image" src="https://github.com/user-attachments/assets/278567b7-6912-4b9d-9bf2-da8ef76f3242" />
 
 Pick your favorite cellular automata pattern.
 
