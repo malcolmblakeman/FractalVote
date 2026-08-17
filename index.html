@@ -484,6 +484,448 @@ body,
   }
 }
 
+/* ---------------- Vote history ---------------- */
+
+.history-toggle{
+  position:fixed;
+  top:18px;
+  right:66px;
+  z-index:28;
+
+  width:38px;
+  height:38px;
+
+  display:grid;
+  place-items:center;
+
+  padding:0;
+
+  border:1px solid var(--border);
+  border-radius:50%;
+
+  background:var(--surface);
+  color:var(--text);
+
+  cursor:pointer;
+
+  font-size:20px;
+  line-height:1;
+
+  box-shadow:0 6px 20px rgba(0,0,0,.12);
+
+  transition:
+    background .2s ease,
+    border-color .2s ease,
+    color .2s ease,
+    transform .18s ease,
+    box-shadow .2s ease;
+}
+
+.history-toggle:hover{
+  transform:translateY(-2px);
+  border-color:var(--border-hover);
+  box-shadow:0 9px 26px rgba(0,0,0,.18);
+}
+
+.history-toggle:active{
+  transform:scale(.94);
+}
+
+.history-toggle:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+}
+
+
+/* ---------------- History Overlay ---------------- */
+
+.history-overlay{
+  position:fixed;
+  inset:0;
+  z-index:29;
+
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(4px);
+
+  opacity:0;
+
+  transition:
+    opacity .25s ease;
+}
+
+.history-overlay.visible{
+  opacity:1;
+}
+
+
+/* ---------------- Full Screen History ---------------- */
+
+.history-panel{
+  position:fixed;
+  inset:0;
+  z-index:30;
+
+  width:100%;
+  height:100%;
+
+  padding:
+    clamp(24px,4vw,56px)
+    clamp(20px,5vw,80px);
+
+  background:var(--bg);
+
+  transform:translateY(100%);
+
+  transition:
+    transform .28s cubic-bezier(.2,.8,.2,1);
+
+  overflow-y:auto;
+  overflow-x:hidden;
+
+  -webkit-overflow-scrolling:touch;
+}
+
+.history-panel.open{
+  transform:translateY(0);
+}
+
+
+/* ---------------- History Header ---------------- */
+
+.history-header{
+  width:min(1500px,100%);
+  margin:0 auto 30px;
+
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+
+  gap:20px;
+}
+
+.history-eyebrow{
+  color:var(--accent);
+
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+
+.history-header h2{
+  margin:5px 0 4px;
+
+  color:var(--text);
+
+  font-size:clamp(26px,3vw,38px);
+  font-weight:650;
+  letter-spacing:-.04em;
+  line-height:1.05;
+}
+
+.history-count{
+  color:var(--muted);
+
+  font-size:11px;
+  letter-spacing:.01em;
+}
+
+
+/* ---------------- Close Button ---------------- */
+
+.history-close{
+  flex:0 0 auto;
+
+  width:40px;
+  height:40px;
+
+  display:grid;
+  place-items:center;
+
+  padding:0;
+
+  border:1px solid var(--border);
+  border-radius:50%;
+
+  background:var(--surface);
+  color:var(--muted);
+
+  cursor:pointer;
+
+  font-size:25px;
+  font-weight:300;
+  line-height:1;
+
+  box-shadow:0 6px 20px rgba(0,0,0,.12);
+
+  transition:
+    color .18s ease,
+    border-color .18s ease,
+    background .18s ease,
+    transform .18s ease,
+    box-shadow .18s ease;
+}
+
+.history-close:hover{
+  color:var(--text);
+
+  border-color:var(--border-hover);
+  background:var(--surface-hover);
+
+  transform:translateY(-2px);
+
+  box-shadow:0 9px 26px rgba(0,0,0,.18);
+}
+
+.history-close:active{
+  transform:scale(.94);
+}
+
+.history-close:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+}
+
+
+/* ---------------- History Messages ---------------- */
+
+.history-message{
+  width:min(1500px,100%);
+
+  margin:40px auto 0;
+
+  padding:40px 10px;
+
+  text-align:center;
+
+  color:var(--muted);
+
+  font-size:12px;
+}
+
+
+/* ---------------- History Grid ---------------- */
+
+.history-list{
+  width:min(1500px,100%);
+  margin:0 auto;
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(5,minmax(0,1fr));
+
+  gap:
+    clamp(12px,1.5vw,22px);
+}
+
+
+/* ---------------- History Card ---------------- */
+
+.history-item{
+  min-width:0;
+
+  padding:8px;
+
+  border:1px solid var(--border);
+  border-radius:14px;
+
+  background:var(--surface);
+
+  box-shadow:
+    0 8px 30px rgba(0,0,0,.14);
+
+  transition:
+    border-color .18s ease,
+    transform .18s ease,
+    background .18s ease,
+    box-shadow .18s ease;
+}
+
+.history-item:hover{
+  border-color:var(--border-hover);
+
+  background:var(--surface-hover);
+
+  transform:translateY(-3px);
+
+  box-shadow:
+    0 14px 38px rgba(0,0,0,.22);
+}
+
+
+/* ---------------- History Canvas ---------------- */
+
+.history-item canvas{
+  width:100%;
+  aspect-ratio:1;
+
+  display:block;
+
+  border-radius:9px;
+
+  background:#000;
+
+  image-rendering:pixelated;
+}
+
+
+/* ---------------- History Rule Label ---------------- */
+
+.history-rule{
+  margin-top:8px;
+
+  padding:
+    0
+    3px
+    2px;
+
+  color:var(--muted);
+
+  text-align:center;
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  font-size:9px;
+  font-weight:500;
+  letter-spacing:.025em;
+
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+
+/* ---------------- History Responsive ---------------- */
+
+@media(max-width:1200px){
+
+  .history-list{
+    grid-template-columns:
+      repeat(4,minmax(0,1fr));
+  }
+
+}
+
+
+@media(max-width:900px){
+
+  .history-panel{
+    padding:
+      28px
+      24px;
+  }
+
+  .history-list{
+    grid-template-columns:
+      repeat(3,minmax(0,1fr));
+
+    gap:14px;
+  }
+
+}
+
+
+@media(max-width:700px){
+
+  .history-toggle{
+    top:12px;
+    right:55px;
+
+    width:35px;
+    height:35px;
+
+    font-size:18px;
+  }
+
+  .history-panel{
+    padding:
+      22px
+      14px
+      30px;
+  }
+
+  .history-header{
+    margin-bottom:20px;
+  }
+
+  .history-header h2{
+    font-size:27px;
+  }
+
+  .history-close{
+    width:35px;
+    height:35px;
+
+    font-size:22px;
+  }
+
+  .history-list{
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+
+    gap:10px;
+  }
+
+  .history-item{
+    padding:6px;
+    border-radius:11px;
+  }
+
+  .history-item canvas{
+    border-radius:7px;
+  }
+
+  .history-rule{
+    margin-top:6px;
+    font-size:8px;
+  }
+
+}
+
+
+@media(max-width:380px){
+
+  .history-panel{
+    padding-left:10px;
+    padding-right:10px;
+  }
+
+  .history-list{
+    gap:7px;
+  }
+
+  .history-item{
+    padding:5px;
+  }
+
+  .history-rule{
+    font-size:7px;
+  }
+
+}
+
+
+/* ---------------- History Reduced Motion ---------------- */
+
+@media(prefers-reduced-motion:reduce){
+
+  .history-overlay,
+  .history-panel,
+  .history-toggle,
+  .history-close,
+  .history-item{
+    transition:none !important;
+  }
+
+}
+
 /* ---------------- Responsive ---------------- */
 
 @media(max-width:900px){
@@ -587,7 +1029,6 @@ body,
 </style>
 </head>
 <body>
-  <body>
   <button
     id="themeToggle"
     class="theme-toggle"
@@ -597,6 +1038,50 @@ body,
   >
     <span id="themeIcon" aria-hidden="true">☀</span>
   </button>
+  <button
+  id="historyToggle"
+  class="history-toggle"
+  type="button"
+  aria-label="View your votes"
+  title="Your votes"
+>
+  <span aria-hidden="true">🕮</span>
+  </button>
+
+<div id="historyOverlay" class="history-overlay" hidden></div>
+
+<aside
+  id="historyPanel"
+  class="history-panel"
+  aria-hidden="true"
+>
+  <div class="history-header">
+    <div>
+      <div class="history-eyebrow">YOUR HISTORY</div>
+      <h2>Your Votes</h2>
+      <div id="historyCount" class="history-count">0 votes</div>
+    </div>
+
+    <button
+      id="historyClose"
+      class="history-close"
+      type="button"
+      aria-label="Close vote history"
+    >
+      ×
+    </button>
+  </div>
+
+  <div id="historyLoading" class="history-message">
+    Loading…
+  </div>
+
+  <div id="historyEmpty" class="history-message" hidden>
+    You haven't voted yet.
+  </div>
+
+  <div id="historyList" class="history-list"></div>
+</aside>
 <div id="loading">Loading…</div>
 <header>
   <div class="eyebrow">CELLULAR AUTOMATA</div>
@@ -638,6 +1123,7 @@ body,
 
 const SUPABASE_VOTE_URL = "https://bhcznxegoudsfrswwffu.supabase.co/functions/v1/vote";
 const SUPABASE_NR_URL = "https://bhcznxegoudsfrswwffu.supabase.co/functions/v1/next-round";
+const SUPABASE_HISTORY_URL = "https://bhcznxegoudsfrswwffu.supabase.co/functions/v1/history";
 const SUPABASE_ANON_KEY = "sb_publishable__vTIjCnt0aWp6RTwmKLV8Q_fWyT_NlY";
 
 const GENERATIONS = 64;
@@ -959,6 +1445,119 @@ async function saveVote(vote){
   return await response.json();
 }
 
+async function loadHistory(){
+  const loading=document.getElementById("historyLoading");
+  const empty=document.getElementById("historyEmpty");
+  const list=document.getElementById("historyList");
+  const count=document.getElementById("historyCount");
+
+  loading.hidden=false;
+  empty.hidden=true;
+  list.innerHTML="";
+  count.textContent="Loading…";
+
+  try{
+    const response=await fetch(SUPABASE_HISTORY_URL,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "apikey":SUPABASE_ANON_KEY,
+        "Authorization":"Bearer "+SUPABASE_ANON_KEY
+      },
+      body:JSON.stringify({
+        session_id:sessionId
+      })
+    });
+
+    if(!response.ok){
+      throw new Error("History request failed: HTTP "+response.status);
+    }
+
+    const data=await response.json();
+
+    if(!data.ok || !Array.isArray(data.votes)){
+      throw new Error("Invalid history response.");
+    }
+
+    loading.hidden=true;
+
+    const votes=data.votes;
+
+    count.textContent=
+      votes.length+" "+(votes.length===1 ? "vote" : "votes");
+
+    if(votes.length===0){
+      empty.hidden=false;
+      return;
+    }
+
+    votes.forEach((vote)=>{
+      if(
+        !vote ||
+        typeof vote.winner!=="string" ||
+        !/^[12]{16}$/.test(vote.winner)
+      ){
+        return;
+      }
+
+      const item=document.createElement("div");
+      item.className="history-item";
+
+      const canvas=document.createElement("canvas");
+      canvas.width=GENERATIONS;
+      canvas.height=GENERATIONS;
+
+      const label=document.createElement("div");
+      label.className="history-rule";
+      label.textContent=vote.winner;
+
+      item.appendChild(canvas);
+      item.appendChild(label);
+      list.appendChild(item);
+
+      drawCA(canvas,vote.winner);
+    });
+
+  }catch(error){
+    console.error("History loading failed:",error);
+
+    loading.hidden=false;
+    loading.textContent="Could not load your votes.";
+    count.textContent="";
+  }
+}
+
+function openHistory(){
+  const panel=document.getElementById("historyPanel");
+  const overlay=document.getElementById("historyOverlay");
+
+  panel.classList.add("open");
+  panel.setAttribute("aria-hidden","false");
+
+  overlay.hidden=false;
+
+  requestAnimationFrame(()=>{
+    overlay.classList.add("visible");
+  });
+
+  loadHistory();
+}
+
+function closeHistory(){
+  const panel=document.getElementById("historyPanel");
+  const overlay=document.getElementById("historyOverlay");
+
+  panel.classList.remove("open");
+  panel.setAttribute("aria-hidden","true");
+  overlay.classList.remove("visible");
+
+  setTimeout(()=>{
+    if(!panel.classList.contains("open")){
+      overlay.hidden=true;
+    }
+  },250);
+}
+
 function escapeHtml(value){
   return String(value)
     .replaceAll("&","&amp;")
@@ -1016,6 +1615,18 @@ applyTheme(getPreferredTheme());
 document
   .getElementById("themeToggle")
   .addEventListener("click",toggleTheme);
+
+document
+  .getElementById("historyToggle")
+  .addEventListener("click",openHistory);
+
+document
+  .getElementById("historyClose")
+  .addEventListener("click",closeHistory);
+
+document
+  .getElementById("historyOverlay")
+  .addEventListener("click",closeHistory);
 
 
 sessionId=getSessionId();
